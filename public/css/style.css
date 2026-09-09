@@ -370,76 +370,185 @@ nav a:hover::after {
 }
 
 
-/* SERVICES */
+/* ------------------------------
+   SERVICES SHOWCASE
+------------------------------ */
 
-.services {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-
-    padding: 0 6%;
-
+.services-showcase {
+    padding: 140px 8%;
     background: var(--cream);
-    border-top: 1px solid rgba(0, 0, 0, .12);
-    border-bottom: 1px solid rgba(0, 0, 0, .12);
 }
 
-.service-card {
-    position: relative;
-
-    min-height: 270px;
-    padding: 42px 35px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+.services-intro {
+    max-width: 1200px;
+    margin-bottom: 110px;
 }
 
-.service-card:not(:last-child) {
-    border-right: 1px solid rgba(0, 0, 0, .12);
-}
-
-.service-number {
-    color: var(--cascade-green);
-
-    font-size: .7rem;
-    font-weight: 800;
-    letter-spacing: .15em;
-}
-
-.service-card h2 {
-    margin: 45px 0 0;
+.services-intro h2 {
+    max-width: 1000px;
+    margin: 0;
 
     color: var(--charcoal);
 
     font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(1.8rem, 2.5vw, 2.7rem);
-    line-height: 1;
+    font-size: clamp(3.6rem, 6.5vw, 7rem);
+    font-weight: 500;
+
+    line-height: .92;
+    letter-spacing: -.05em;
 }
 
-.service-card p {
-    margin: 8px 0 30px;
+.services-intro > p:last-child {
+    max-width: 620px;
+    margin: 45px 0 0 auto;
 
     color: var(--muted);
 
-    font-size: .8rem;
-    font-weight: 700;
-    letter-spacing: .15em;
-    text-transform: uppercase;
+    font-size: 1.08rem;
+    line-height: 1.75;
 }
 
-.service-card a {
-    margin-top: auto;
+.service-feature {
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 8%;
+
+    align-items: center;
+
+    margin-bottom: 140px;
+}
+
+.service-feature-reverse {
+    grid-template-columns: .8fr 1.2fr;
+}
+
+.service-feature-reverse .service-feature-image {
+    order: 2;
+}
+
+.service-feature-reverse .service-feature-content {
+    order: 1;
+}
+
+.service-feature-image {
+    min-height: 620px;
+
+    overflow: hidden;
+
+    background: #d9d6cf;
+}
+
+.service-feature-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition: transform .6s ease;
+}
+
+.service-feature:hover .service-feature-image img {
+    transform: scale(1.02);
+}
+
+.service-feature-content {
+    max-width: 540px;
+}
+
+.service-feature-number {
+    display: block;
+    margin-bottom: 50px;
 
     color: var(--cascade-green);
 
     font-size: .72rem;
     font-weight: 800;
-    letter-spacing: .08em;
+    letter-spacing: .16em;
+}
+
+.service-feature-label {
+    margin: 0 0 15px;
+
+    color: var(--muted);
+
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .16em;
     text-transform: uppercase;
 }
 
-.service-card a:hover {
+.service-feature-content h3 {
+    margin: 0;
+
+    color: var(--charcoal);
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(3rem, 4.5vw, 5.2rem);
+    font-weight: 500;
+
+    line-height: .95;
+    letter-spacing: -.04em;
+}
+
+.service-feature-copy {
+    margin: 35px 0 35px;
+
+    color: var(--muted);
+
+    font-size: 1.05rem;
+    line-height: 1.75;
+}
+
+.service-feature-content a {
+    display: inline-block;
+
+    padding-bottom: 7px;
+
+    color: var(--cascade-green);
+
+    border-bottom: 1px solid var(--cascade-green);
+
+    font-size: .73rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.service-feature-content a:hover {
     opacity: .65;
+}
+
+.service-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--cascade-green-dark);
+    color: var(--white);
+}
+
+.service-placeholder div {
+    text-align: center;
+}
+
+.service-placeholder span {
+    display: block;
+
+    color: var(--cascade-blue);
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 6rem;
+    line-height: 1;
+}
+
+.service-placeholder p {
+    margin: 20px 0 0;
+
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .18em;
 }
 
 
@@ -1102,7 +1211,7 @@ nav a:hover::after {
         font-size: .6rem;
     }
 
-    @media (max-width: 900px) {
+
 
     .hero {
         min-height: 760px;
@@ -1131,7 +1240,7 @@ nav a:hover::after {
     }
 
     .hero h1 {
-        font-size: clamp(4rem, 16vw, 6rem);
+        font-size: clamp(3.4rem, 13vw, 5rem);
     }
 
     .hero-description {
@@ -1150,7 +1259,7 @@ nav a:hover::after {
 
         gap: 10px;
     }
-}
+
 
 @media (max-width: 550px) {
 
@@ -1163,8 +1272,9 @@ nav a:hover::after {
     }
 
     .hero h1 {
-        font-size: clamp(3.5rem, 16vw, 4.8rem);
-    }
+    font-size: clamp(3rem, 12.8vw, 4rem);
+    line-height: .94;
+}
 
     .hero-actions {
         flex-direction: column;
@@ -1197,28 +1307,42 @@ nav a:hover::after {
 
     /* SERVICES */
 
-    .services {
-        grid-template-columns: repeat(2, 1fr);
-        padding: 0;
-    }
+   .services-showcase {
+    padding: 90px 6%;
+}
 
-    .service-card {
-        min-height: 230px;
-        padding: 35px 25px;
-        border-bottom: 1px solid rgba(0, 0, 0, .12);
-    }
+.services-intro {
+    margin-bottom: 70px;
+}
 
-    .service-card:not(:last-child) {
-        border-right: none;
-    }
+.services-intro > p:last-child {
+    margin-left: 0;
+}
 
-    .service-card:nth-child(odd) {
-        border-right: 1px solid rgba(0, 0, 0, .12);
-    }
+.service-feature,
+.service-feature-reverse {
+    grid-template-columns: 1fr;
+    gap: 45px;
 
-    .service-card h2 {
-        margin-top: 35px;
-    }
+    margin-bottom: 95px;
+}
+
+.service-feature-reverse .service-feature-image,
+.service-feature-reverse .service-feature-content {
+    order: initial;
+}
+
+.service-feature-image {
+    min-height: 430px;
+}
+
+.service-feature-content {
+    max-width: none;
+}
+
+.service-feature-number {
+    margin-bottom: 30px;
+}
 
 
     /* CASCADE STANDARD */
