@@ -826,6 +826,10 @@ nav a:hover::after {
     color: var(--white);
 }
 
+.google-reviews-widget {
+    margin-top: 60px;
+    margin-bottom: 45px;
+}
 
 /* TOP */
 
