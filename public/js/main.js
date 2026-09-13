@@ -60,15 +60,35 @@ const trackAnalyticsEvent = (eventName, params = {}) => {
   window.gtag('event', eventName, params);
 };
 
-// Track clicks on any phone link as a lead action.
+// Track clicks on any phone link as a lead action. On mobile, opening the
+// phone app can move the browser to the background before Analytics has time
+// to send the event, so briefly hold navigation and use a callback/fallback.
 document.addEventListener('click', event => {
   const phoneLink = event.target.closest('a[href^="tel:"]');
   if (!phoneLink) return;
 
-  trackAnalyticsEvent('phone_call_click', {
+  if (typeof window.gtag !== 'function') return;
+
+  event.preventDefault();
+  const phoneHref = phoneLink.href;
+  let navigated = false;
+
+  const continueToPhone = () => {
+    if (navigated) return;
+    navigated = true;
+    window.location.href = phoneHref;
+  };
+
+  window.gtag('event', 'phone_call_click', {
     method: 'phone',
-    link_text: phoneLink.textContent.trim().replace(/\s+/g, ' ').slice(0, 100)
+    link_text: phoneLink.textContent.trim().replace(/\s+/g, ' ').slice(0, 100),
+    transport_type: 'beacon',
+    event_callback: continueToPhone,
+    event_timeout: 800
   });
+
+  // Never make the visitor wait if Analytics is slow or blocked.
+  window.setTimeout(continueToPhone, 900);
 });
 
 const form = document.getElementById('estimate-form');
