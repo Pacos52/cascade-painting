@@ -55,6 +55,22 @@ if ('IntersectionObserver' in window) {
   reveals.forEach(el => el.classList.add('in-view'));
 }
 
+const trackAnalyticsEvent = (eventName, params = {}) => {
+  if (typeof window.gtag !== 'function') return;
+  window.gtag('event', eventName, params);
+};
+
+// Track clicks on any phone link as a lead action.
+document.addEventListener('click', event => {
+  const phoneLink = event.target.closest('a[href^="tel:"]');
+  if (!phoneLink) return;
+
+  trackAnalyticsEvent('phone_call_click', {
+    method: 'phone',
+    link_text: phoneLink.textContent.trim().replace(/\s+/g, ' ').slice(0, 100)
+  });
+});
+
 const form = document.getElementById('estimate-form');
 const status = document.querySelector('[data-form-status]');
 
@@ -89,6 +105,14 @@ form?.addEventListener('submit', event => {
     'Project details:',
     data.get('message') || 'No additional details provided.'
   ].join('\n');
+
+  // Do not send names, email addresses, phone numbers, or other user-entered
+  // personal information to Google Analytics. This event records only the
+  // successful estimate-form action and the selected project type.
+  trackAnalyticsEvent('generate_lead', {
+    method: 'estimate_form',
+    project_type: String(data.get('projectType') || 'unknown')
+  });
 
   status.textContent = 'Opening your email app with the project details prepared…';
   window.location.href = `mailto:paxton@cascadepaintingpa.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
