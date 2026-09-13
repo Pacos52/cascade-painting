@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    <url>
-        <loc>https://www.cascadepaintingpa.com/</loc>
-    </url>
-
-    <url>
-        <loc>https://www.cascadepaintingpa.com/interior-painting-lansdale-pa/</loc>
-    </url>
-
+  <url><loc>https://cascadepaintingpa.com/</loc><lastmod>2026-09-13</lastmod></url>
+  <url><loc>https://cascadepaintingpa.com/services/</loc><lastmod>2026-09-13</lastmod></url>
+  <url><loc>https://cascadepaintingpa.com/interior-painting-lansdale-pa/</loc><lastmod>2026-09-13</lastmod></url>
+  <url><loc>https://cascadepaintingpa.com/exterior-painting-lansdale-pa/</loc><lastmod>2026-09-13</lastmod></url>
+  <url><loc>https://cascadepaintingpa.com/cabinet-refinishing-lansdale-pa/</loc><lastmod>2026-09-13</lastmod></url>
+  <url><loc>https://cascadepaintingpa.com/commercial-painting-lansdale-pa/</loc><lastmod>2026-09-13</lastmod></url>
+  <url><loc>https://cascadepaintingpa.com/about/</loc><lastmod>2026-09-13</lastmod></url>
+  <url><loc>https://cascadepaintingpa.com/projects/</loc><lastmod>2026-09-13</lastmod></url>
+  <url><loc>https://cascadepaintingpa.com/service-areas/</loc><lastmod>2026-09-13</lastmod></url>
+  <url><loc>https://cascadepaintingpa.com/painting-contractor-lansdale-pa/</loc><lastmod>2026-09-13</lastmod></url>
 </urlset>
