@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /api/
 
 Sitemap: https://cascadepaintingpa.com/sitemap.xml
 Sitemap: https://cascadepaintingpa.com/image-sitemap.xml

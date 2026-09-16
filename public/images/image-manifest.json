@@ -1,0 +1,372 @@
+{
+  "hero-living-room": [
+    {
+      "width": 640,
+      "height": 400,
+      "file": "hero-living-room-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 600,
+      "file": "hero-living-room-960.webp"
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "file": "hero-living-room-1280.webp"
+    },
+    {
+      "width": 1600,
+      "height": 1000,
+      "file": "hero-living-room-1600.webp"
+    },
+    {
+      "width": 1920,
+      "height": 1200,
+      "file": "hero-living-room-1920.webp"
+    }
+  ],
+  "living-room-wide": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "living-room-wide-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "living-room-wide-960.webp"
+    },
+    {
+      "width": 1280,
+      "height": 960,
+      "file": "living-room-wide-1280.webp"
+    },
+    {
+      "width": 1600,
+      "height": 1200,
+      "file": "living-room-wide-1600.webp"
+    },
+    {
+      "width": 1920,
+      "height": 1440,
+      "file": "living-room-wide-1920.webp"
+    }
+  ],
+  "living-room-alt": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "living-room-alt-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "living-room-alt-960.webp"
+    },
+    {
+      "width": 1280,
+      "height": 960,
+      "file": "living-room-alt-1280.webp"
+    },
+    {
+      "width": 1600,
+      "height": 1200,
+      "file": "living-room-alt-1600.webp"
+    },
+    {
+      "width": 1920,
+      "height": 1440,
+      "file": "living-room-alt-1920.webp"
+    }
+  ],
+  "dining-room": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "dining-room-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "dining-room-960.webp"
+    },
+    {
+      "width": 1280,
+      "height": 960,
+      "file": "dining-room-1280.webp"
+    },
+    {
+      "width": 1600,
+      "height": 1200,
+      "file": "dining-room-1600.webp"
+    },
+    {
+      "width": 1920,
+      "height": 1440,
+      "file": "dining-room-1920.webp"
+    }
+  ],
+  "den": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "den-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "den-960.webp"
+    },
+    {
+      "width": 1280,
+      "height": 960,
+      "file": "den-1280.webp"
+    },
+    {
+      "width": 1600,
+      "height": 1200,
+      "file": "den-1600.webp"
+    },
+    {
+      "width": 1920,
+      "height": 1440,
+      "file": "den-1920.webp"
+    }
+  ],
+  "bedroom": [
+    {
+      "width": 640,
+      "height": 800,
+      "file": "bedroom-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 1200,
+      "file": "bedroom-960.webp"
+    },
+    {
+      "width": 1080,
+      "height": 1350,
+      "file": "bedroom-1080.webp"
+    }
+  ],
+  "deck": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "deck-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "deck-960.webp"
+    },
+    {
+      "width": 1280,
+      "height": 960,
+      "file": "deck-1280.webp"
+    },
+    {
+      "width": 1600,
+      "height": 1200,
+      "file": "deck-1600.webp"
+    },
+    {
+      "width": 1920,
+      "height": 1440,
+      "file": "deck-1920.webp"
+    }
+  ],
+  "garage": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "garage-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "garage-960.webp"
+    },
+    {
+      "width": 1280,
+      "height": 960,
+      "file": "garage-1280.webp"
+    },
+    {
+      "width": 1600,
+      "height": 1200,
+      "file": "garage-1600.webp"
+    },
+    {
+      "width": 1920,
+      "height": 1440,
+      "file": "garage-1920.webp"
+    }
+  ],
+  "garage-alt": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "garage-alt-640.webp"
+    },
+    {
+      "width": 955,
+      "height": 716,
+      "file": "garage-alt-955.webp"
+    }
+  ],
+  "basement": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "basement-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "basement-960.webp"
+    },
+    {
+      "width": 1000,
+      "height": 750,
+      "file": "basement-1000.webp"
+    }
+  ],
+  "basement-alt": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "basement-alt-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "basement-alt-960.webp"
+    },
+    {
+      "width": 1000,
+      "height": 750,
+      "file": "basement-alt-1000.webp"
+    }
+  ],
+  "drywall": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "drywall-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "drywall-960.webp"
+    },
+    {
+      "width": 1280,
+      "height": 960,
+      "file": "drywall-1280.webp"
+    },
+    {
+      "width": 1600,
+      "height": 1200,
+      "file": "drywall-1600.webp"
+    },
+    {
+      "width": 1920,
+      "height": 1440,
+      "file": "drywall-1920.webp"
+    }
+  ],
+  "maple-glen": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "maple-glen-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "maple-glen-960.webp"
+    },
+    {
+      "width": 1280,
+      "height": 960,
+      "file": "maple-glen-1280.webp"
+    },
+    {
+      "width": 1600,
+      "height": 1200,
+      "file": "maple-glen-1600.webp"
+    },
+    {
+      "width": 1920,
+      "height": 1440,
+      "file": "maple-glen-1920.webp"
+    }
+  ],
+  "kitchen": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "kitchen-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "kitchen-960.webp"
+    },
+    {
+      "width": 1254,
+      "height": 941,
+      "file": "kitchen-1254.webp"
+    }
+  ],
+  "cabinets": [
+    {
+      "width": 640,
+      "height": 480,
+      "file": "cabinets-640.webp"
+    },
+    {
+      "width": 960,
+      "height": 720,
+      "file": "cabinets-960.webp"
+    },
+    {
+      "width": 1254,
+      "height": 941,
+      "file": "cabinets-1254.webp"
+    }
+  ],
+  "hero-kitchen": [
+    {
+      "file": "hero-kitchen-640.webp",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "file": "hero-kitchen-960.webp",
+      "width": 960,
+      "height": 541
+    },
+    {
+      "file": "hero-kitchen-1280.webp",
+      "width": 1280,
+      "height": 721
+    },
+    {
+      "file": "hero-kitchen-1600.webp",
+      "width": 1600,
+      "height": 901
+    },
+    {
+      "file": "hero-kitchen-1671.webp",
+      "width": 1671,
+      "height": 941
+    }
+  ],
+  "logo-footer.png": {
+    "role": "footer brand mark"
+  }
+}
