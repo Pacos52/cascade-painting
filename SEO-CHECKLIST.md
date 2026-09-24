@@ -18,7 +18,7 @@
 - explicit image dimensions to reduce layout shift
 - hero image preload / fetch priority
 - lazy loading on below-the-fold images
-- delayed Trustindex loading plus a graceful failure fallback
+- direct Google Reviews links without a third-party review embed
 - XML sitemap aligned only to indexable pages
 - image sitemap tied to the landing pages where images appear
 - robots.txt
@@ -44,7 +44,7 @@ These require the production domain or account access and cannot be fully valida
 4. Add the exact Facebook business URL only after it is confirmed; do not guess a profile URL.
 5. Add GA4 / Google Ads conversion IDs when the actual property IDs are known. The frontend already exposes conversion events and retains campaign attribution.
 6. Connect `/api/lead` to D1, Resend and/or the CRM webhook and test a real lead.
-7. Replace the Trustindex source in `build_site.py` if the current widget changes, then regenerate pages.
+7. Confirm the Google Reviews links still open the correct Business Profile after any profile or URL change.
 8. Keep adding original project photography and substantive project/location notes instead of generating thin city pages at scale.
 9. Run PageSpeed Insights/Lighthouse on the deployed site to measure real CDN and third-party behavior.
 

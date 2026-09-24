@@ -71,62 +71,6 @@
     if (innerWidth > 900 && menu?.classList.contains('is-open')) closeMenu();
   }, { passive: true });
 
-  // Lazy-load the external review widget and fail gracefully if it is blocked or unavailable.
-  qsa('[data-trustindex-src]').forEach(stage => {
-    let started = false;
-    let settled = false;
-    const skeleton = qs('.review-skeleton', stage);
-    const fallback = qs('.review-fallback', stage);
-
-    const hasRenderedWidget = () => [...stage.children].some(el => {
-      if (el === skeleton || el === fallback || ['SCRIPT', 'NOSCRIPT'].includes(el.tagName)) return false;
-      return el.tagName === 'IFRAME' || el.getBoundingClientRect().height > 40;
-    });
-    const finish = ok => {
-      if (settled) return;
-      settled = true;
-      skeleton?.remove();
-      if (fallback) fallback.hidden = ok;
-    };
-    const watchForWidget = () => {
-      if (hasRenderedWidget()) return finish(true);
-      const observer = new MutationObserver(() => {
-        if (hasRenderedWidget()) {
-          observer.disconnect();
-          finish(true);
-        }
-      });
-      observer.observe(stage, { childList: true, subtree: true, attributes: true });
-      setTimeout(() => {
-        observer.disconnect();
-        finish(hasRenderedWidget());
-      }, 12000);
-    };
-    const load = () => {
-      if (started) return;
-      started = true;
-      const script = document.createElement('script');
-      script.src = stage.dataset.trustindexSrc;
-      script.async = true;
-      script.defer = true;
-      script.addEventListener('load', watchForWidget, { once: true });
-      script.addEventListener('error', () => finish(false), { once: true });
-      stage.appendChild(script);
-    };
-
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(entries => {
-        if (entries.some(entry => entry.isIntersecting)) {
-          load();
-          io.disconnect();
-        }
-      }, { rootMargin: '900px' });
-      io.observe(stage);
-    } else {
-      load();
-    }
-  });
-
   // Project reel controls.
   const reel = qs('[data-project-reel]');
   const shiftReel = dir => {

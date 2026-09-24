@@ -16,7 +16,7 @@
 ## Live launch checks
 - Submit one real test lead on desktop and mobile.
 - Click phone/email/estimate CTAs.
-- Confirm Trustindex loads on Home and Reviews.
+- Confirm the Google Reviews links on Home and Reviews open the correct Business Profile.
 - Test `/404-test` and legacy redirects.
 - Run PageSpeed Insights on Home, Interior Painting and Estimate.
 - Run Google Rich Results Test on Home and one service page.

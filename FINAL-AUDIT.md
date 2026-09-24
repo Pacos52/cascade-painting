@@ -18,7 +18,7 @@ Audit date: 2026-09-16
 ## Production optimization included
 
 - full-bleed homepage hero retained
-- live review feed remains directly under the hero
+- direct Google Reviews link remains directly under the hero
 - owner/about story remains directly below reviews
 - real project-story pages added
 - homeowner resource center added
@@ -30,7 +30,7 @@ Audit date: 2026-09-16
 - D1 schema extended for lead status, attribution and web events
 - optional hashed-IP rate limiting added without storing raw IP addresses
 - CSS/JS URLs are deployment-versioned so assets can use immutable caching safely
-- Trustindex preconnect is removed from pages that do not use the widget
+- no third-party review-widget scripts are loaded
 - GitHub Actions QA workflow added
 
 ## Checks that still require the live production URL
@@ -40,7 +40,7 @@ Source-level QA cannot substitute for these deployment checks:
 1. Cloudflare response headers and redirects
 2. end-to-end `/api/lead` delivery with the configured production bindings
 3. D1 migration state
-4. real Trustindex rendering from the production domain
+4. Google Reviews links opening the correct public Business Profile
 5. PageSpeed/Core Web Vitals under live network conditions
 6. Google Rich Results Test
 7. Search Console indexing, sitemap processing and crawl diagnostics

@@ -47,7 +47,7 @@ The build contains:
 
 - primary service landing pages
 - core local service-area pages
-- live Google review integration with fallback
+- direct Google Reviews links without a third-party widget
 - real project journal + four full project stories
 - homeowner resource hub + five substantial guides
 - project/service/resource cross-linking
