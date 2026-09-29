@@ -2,6 +2,11 @@
   "name": "cascade-painting",
   "compatibility_date": "2026-09-07",
   "main": "./worker/index.js",
+  "keep_vars": true,
+  "vars": {
+    "GOOGLE_REDIRECT_URI": "https://cascadepaintingpa.com/api/google/callback",
+    "GOOGLE_BUSINESS_NAME": "Cascade Painting"
+  },
   "assets": {
     "directory": "./public/",
     "binding": "ASSETS",
