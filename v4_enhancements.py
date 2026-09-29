@@ -789,9 +789,9 @@ def apply():
     update_privacy()
     append_css()
     append_js()
-    update_schema_and_functions()
+    # Backend, schema, tests, workflows, and documentation are maintained source
+    # files. The original one-time scaffolding must not overwrite them on builds.
     update_support_files()
-    write_qa_and_docs()
     print('V4 production optimization applied')
 
 

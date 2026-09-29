@@ -11,7 +11,8 @@ Open this project folder in VS Code and run Live Server. The included `.vscode/s
 ```bash
 python build_site.py
 python tools/site_audit.py
-node --check public/assets/site.js
+npm run check
+npm test
 ```
 
 `build_site.py` creates the base pages and automatically runs `v4_enhancements.py`, which adds the production optimization layer, project stories, homeowner resources, internal linking, analytics hooks and support files.
@@ -35,7 +36,7 @@ If the current Cloudflare setup uses no build command, the already-generated `pu
 - UTM/GCLID/referrer/landing-page attribution
 - optional privacy-preserving submission rate limiting through `RATE_LIMIT_SALT`
 
-For a fresh D1 database use `schema.sql`. For a database created from the previous version, use `migrations/0002_v4_production.sql`.
+For a fresh D1 database use `schema.sql`. For a database created from the previous version, apply `migrations/0002_v4_production.sql` and then `migrations/0003_google_reviews.sql`.
 
 ## First-party site measurement
 
@@ -47,7 +48,7 @@ The build contains:
 
 - primary service landing pages
 - core local service-area pages
-- direct Google Reviews links without a third-party widget
+- live Google Business Profile reviews with a direct public Google link
 - real project journal + four full project stories
 - homeowner resource hub + five substantial guides
 - project/service/resource cross-linking
@@ -56,6 +57,10 @@ The build contains:
 ## App integration
 
 See `APP-INTEGRATION.md`. The public site is ready to send normalized leads and source attribution to `app.cascadepaintingpa.com` without changing the public URL structure.
+
+## Google Business Profile reviews
+
+The review section uses server-side Google OAuth through Cloudflare Pages Functions. Tokens are encrypted in D1, review content is encrypted in an expiring KV cache, and the browser receives only display-safe review data. See `GOOGLE-REVIEWS-SETUP.md` for the exact Google Cloud callback URI, Cloudflare variables and secrets, migration, bindings, and first authorization steps.
 
 ## Production launch
 

@@ -1,0 +1,27 @@
+/* Live review cards inherit Cascade's existing colors, type, and link-card layout. */
+[data-google-reviews] [hidden], [data-review-hero-rating][hidden] { display: none !important; }
+.google-reviews-live { margin-top: 22px; }
+.google-reviews-status { min-height: 1.6em; margin: 0 0 20px; color: var(--muted); font-size: .78rem; line-height: 1.6; }
+.google-reviews-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; list-style: none; padding: 0; margin: 0; }
+.google-review-item { min-width: 0; }
+.google-live-review { height: 100%; display: flex; flex-direction: column; padding: 26px; border: 1px solid var(--line); border-radius: 18px; background: #fff; color: var(--ink); }
+.google-review-author { display: flex; align-items: center; gap: 12px; }
+.google-review-avatar { position: relative; display: grid; place-items: center; flex: 0 0 40px; width: 40px; height: 40px; overflow: hidden; border-radius: 50%; background: var(--paper-2); color: var(--ink); font-size: 1rem; font-weight: 800; }
+.google-review-avatar img { position: absolute; inset: 0; width: 40px; height: 40px; object-fit: cover; }
+.google-review-byline { min-width: 0; }
+.google-review-name { margin: 0; font-family: var(--sans); font-size: .85rem; line-height: 1.45; font-weight: 800; overflow-wrap: anywhere; }
+.google-review-date { display: block; margin-top: 3px; color: var(--muted); font-size: .68rem; line-height: 1.5; }
+.google-review-rating { margin-top: 20px; color: var(--pine-2); letter-spacing: .1em; font-size: 1.05rem; }
+.google-review-comment { margin: 12px 0 22px; font-size: .84rem; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; }
+.google-review-source { margin-top: auto; color: var(--muted); font-size: .65rem; }
+.review-band .google-live-review { background: rgba(255,255,255,.055); border-color: rgba(255,255,255,.18); color: #fff; }
+.review-band .google-reviews-status, .review-band .google-review-date, .review-band .google-review-source { color: rgba(255,255,255,.72); }
+.review-band .google-review-rating { color: var(--river-2); }
+@media (max-width: 980px) {
+  .review-page .google-reviews-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .review-band .google-reviews-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .review-page .google-reviews-grid { grid-template-columns: 1fr; }
+  .google-live-review { padding: 22px; }
+}
