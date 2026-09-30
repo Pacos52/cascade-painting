@@ -227,7 +227,14 @@ export async function handleGoogleStart({ request, env }) {
       client_id: env.GOOGLE_CLIENT_ID, redirect_uri: config.redirect.href, response_type: 'code', scope: SCOPE,
       access_type: 'offline', prompt: 'consent', state, code_challenge: await sha256(verifier), code_challenge_method: 'S256',
     }).toString();
-    return new Response(null, { status: 303, headers: { ...secureHeaders, Location: authorize.href, 'Set-Cookie': cookie(config, browser) } });
+       return html(
+      'Continue to Google',
+      `<p>Your setup password was accepted.</p>
+       <p>Continue to Google to authorize Cascade Painting to access your Business Profile.</p>
+       <p><a href="${escapeHtml(authorize.href)}">Continue with Google</a></p>`,
+      200,
+      { 'Set-Cookie': cookie(config, browser) }
+    );
   } catch (error) { return ownerError(error); }
 }
 
