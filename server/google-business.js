@@ -191,7 +191,7 @@ async function authenticateOwner(config, request) {
   }
 }
 
-function ownerError(error, clearCookie) {
+function ownerError(error, clearCookie, reference = '') {
   const messages = {
     configuration: 'Google reviews setup is not configured yet. Check the server environment and database migration.',
     origin: 'Open this page on the configured website address to continue.',
@@ -203,9 +203,17 @@ function ownerError(error, clearCookie) {
     location_not_found: 'No matching business location was found. Check the business name and any configured account or location IDs, then connect again.',
     reconnect_required: 'Google authorization has expired or was revoked. Start a new connection.',
     google_access: 'Google denied API access. Check API approval, enabled APIs, permissions, and whether the business location is verified.',
+    google_unauthorized: 'Google rejected the temporary authorization. Start a new connection and approve access again.',
+    google_response: 'Google returned an unexpected response while the connection was being completed.',
+    google_unavailable: 'Google could not be reached while the connection was being completed. Please try again.',
+    google_rate_limit: 'Google temporarily limited API requests. Please wait and try again.',
+    oauth_invalid_client: 'Google rejected the OAuth client credentials. Check that the deployed client ID and secret belong to the same OAuth client.',
+    oauth_invalid_request: 'Google rejected the OAuth token request. Check the deployed callback and OAuth request settings.',
+    oauth_unauthorized_client: 'This Google OAuth client is not authorized to complete the token exchange.',
     no_refresh_token: 'Google did not provide offline access. Remove this app from your Google account permissions, then connect again.',
   };
-  return html('Google connection needs attention', `<p>${escapeHtml(messages[error?.code] || 'The Google connection could not be completed. Please try again or check the server configuration.')}</p><p><a href="/api/google/start">Start Google connection</a> · <a href="/api/google/status">Connection status</a></p>`, error?.status || 503, clearCookie ? { 'Set-Cookie': clearCookie } : {});
+  const detail = reference ? `<p><small>Reference: ${escapeHtml(reference)}</small></p>` : '';
+  return html('Google connection needs attention', `<p>${escapeHtml(messages[error?.code] || 'The Google connection could not be completed. Please try again or check the server configuration.')}</p>${detail}<p><a href="/api/google/start">Start Google connection</a> · <a href="/api/google/status">Connection status</a></p>`, error?.status || 503, clearCookie ? { 'Set-Cookie': clearCookie } : {});
 }
 
 export async function handleGoogleStart({ request, env }) {
@@ -247,6 +255,10 @@ async function fetchJSON(url, init = {}) {
     try { data = await response.json(); } catch { throw new IntegrationError('google_response'); }
     if (!response.ok) {
       if (data?.error === 'invalid_grant') throw new IntegrationError('reconnect_required', 401);
+      if (url === TOKEN_URL && data?.error === 'invalid_client') throw new IntegrationError('oauth_invalid_client', 502);
+      if (url === TOKEN_URL && data?.error === 'invalid_request') throw new IntegrationError('oauth_invalid_request', 502);
+      if (url === TOKEN_URL && data?.error === 'unauthorized_client') throw new IntegrationError('oauth_unauthorized_client', 502);
+      if (url === TOKEN_URL && /^[a-z_]{1,64}$/.test(data?.error || '')) throw new IntegrationError(`oauth_${data.error}`, 502);
       if (response.status === 401) throw new IntegrationError('google_unauthorized', 401);
       if (response.status === 403) throw new IntegrationError('google_access', 403);
       if (response.status === 404) throw new IntegrationError('google_not_found', 404);
@@ -339,24 +351,30 @@ export async function discoverBusiness(config, accessToken) {
 export async function handleGoogleCallback({ request, env }) {
   if (request.method !== 'GET') return methodNotAllowed('GET');
   let config;
+  let stage = 'configuration';
   try {
     config = validateConfiguration(env, request);
+    stage = 'request_validation';
     const params = new URL(request.url).searchParams;
     const state = params.get('state') || '';
     const browser = readCookie(request);
     if (params.getAll('state').length !== 1 || !/^[A-Za-z0-9_-]{43}$/.test(state) || !/^[A-Za-z0-9_-]{43}$/.test(browser)) throw new IntegrationError('state', 400);
     // DELETE ... RETURNING atomically consumes the state, including denied grants.
+    stage = 'state_consume';
     const stored = await env.DB.prepare('DELETE FROM google_oauth_states WHERE state_hash = ? AND browser_hash = ? AND expires_at > ? RETURNING pkce_ciphertext')
       .bind(await sha256(state), await sha256(browser), Date.now()).first();
     if (!stored) throw new IntegrationError('state', 400);
     if (params.has('error')) throw new IntegrationError('denied', 400);
     const code = params.get('code');
     if (params.getAll('code').length !== 1 || !code || code.length > 8192) throw new IntegrationError('state', 400);
+    stage = 'token_exchange';
     const verifier = await decryptSecret(config, stored.pkce_ciphertext, 'oauth-pkce');
     const data = await exchangeToken(config, { grant_type: 'authorization_code', code, redirect_uri: config.redirect.href, code_verifier: verifier });
     // A reconnect can omit refresh_token; keep the existing grant only when the
     // discovered account/location pair below is exactly the same as before.
+    stage = 'business_discovery';
     const business = await discoverBusiness(config, data.access_token);
+    stage = 'connection_storage';
     const previous = await env.DB.prepare('SELECT * FROM google_business_connection WHERE id = 1').first();
     let previousRefresh;
     if (!data.refresh_token && previous && previous.account_id === business.accountID && previous.location_id === business.locationID) {
@@ -376,7 +394,11 @@ export async function handleGoogleCallback({ request, env }) {
     ]);
     if (oldCache?.payload_key) await env.GOOGLE_REVIEWS_CACHE.delete(oldCache.payload_key);
     return html('Google Business Profile connected', '<p>Your business location is connected. Reviews will load on the website when the reviews section is visited.</p><p><a href="/api/google/status">Check connection status</a> · <a href="/reviews/">View reviews page</a></p>', 200, { 'Set-Cookie': cookie(config, '', 0) });
-  } catch (error) { return ownerError(error, config ? cookie(config, '', 0) : undefined); }
+  } catch (error) {
+    const code = error instanceof IntegrationError ? error.code : 'unexpected';
+    console.error('Google OAuth callback failed', { stage, code });
+    return ownerError(error, config ? cookie(config, '', 0) : undefined, `${stage}/${code}`);
+  }
 }
 
 function safeDate(value) {

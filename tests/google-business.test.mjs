@@ -147,7 +147,9 @@ test('business discovery skips accessible accounts with no locations', async (co
 test('missing configuration fails safely and public reviews expose no secrets', async () => {
   const callback = await handleGoogleCallback({ request: new Request('https://cascadepaintingpa.com/api/google/callback'), env: {} });
   assert.equal(callback.status, 503);
-  assert.ok(!(await callback.text()).includes(secretValue));
+  const callbackPage = await callback.text();
+  assert.match(callbackPage, /Reference: configuration\/configuration/);
+  assert.ok(!callbackPage.includes(secretValue));
 
   const env = environment();
   const response = await handleReviews({ request: new Request('https://cascadepaintingpa.com/api/reviews'), env });
