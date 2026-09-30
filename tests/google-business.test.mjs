@@ -81,14 +81,24 @@ test('OAuth start requires owner password and produces an offline PKCE request',
     body: new URLSearchParams({ password: env.GOOGLE_SETUP_PASSWORD }),
   });
   const response = await handleGoogleStart({ request, env });
-  assert.equal(response.status, 303);
-  const target = new URL(response.headers.get('location'));
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get('content-type'), /text\/html/);
+  assert.equal(response.headers.get('location'), null);
+  assert.match(response.headers.get('set-cookie'), /HttpOnly; SameSite=Lax; Secure/);
+
+  const page = await response.text();
+  const link = page.match(/<a href="([^"]+)">Continue with Google<\/a>/);
+  assert.ok(link, 'password submission should render an explicit Google continuation link');
+  const target = new URL(link[1].replaceAll('&amp;', '&'));
   assert.equal(target.origin, 'https://accounts.google.com');
   assert.equal(target.searchParams.get('access_type'), 'offline');
   assert.equal(target.searchParams.get('prompt'), 'consent');
   assert.equal(target.searchParams.get('code_challenge_method'), 'S256');
   assert.equal(target.searchParams.get('redirect_uri'), env.GOOGLE_REDIRECT_URI);
+  assert.match(target.searchParams.get('state'), /^[A-Za-z0-9_-]{43}$/);
+  assert.match(target.searchParams.get('code_challenge'), /^[A-Za-z0-9_-]{43}$/);
   assert.ok(env.DB.oauthState);
+  assert.ok(!page.includes(secretValue));
   assert.ok(!target.href.includes(secretValue));
 });
 
