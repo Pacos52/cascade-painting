@@ -37,6 +37,13 @@
     return parsed && Number.isFinite(parsed.getTime()) ? parsed : null;
   }
 
+  function isWrongCompanyReview(review) {
+    const author = typeof review.reviewer?.displayName === 'string'
+      ? review.reviewer.displayName.trim().toLowerCase() : '';
+    const comment = typeof review.comment === 'string' ? review.comment.toLowerCase() : '';
+    return author === 'cara beck' && comment.includes('cascade bear painting');
+  }
+
   function reviewCard(review) {
     const item = element('li', 'google-review-item');
     const card = element('article', 'google-live-review');
@@ -86,8 +93,8 @@
   function render(section, data) {
     const list = section.querySelector('[data-reviews-list]');
     const limit = Math.min(12, Math.max(1, Number(section.dataset.reviewLimit) || 3));
-    const reviews = data.reviews.filter(review => review && Number.isInteger(review.starRating)
-      && review.starRating >= 1 && review.starRating <= 5)
+    const reviews = data.reviews.filter(review => review && !isWrongCompanyReview(review)
+      && Number.isInteger(review.starRating) && review.starRating >= 1 && review.starRating <= 5)
       .sort((a, b) => (reviewDate(b)?.getTime() || 0) - (reviewDate(a)?.getTime() || 0))
       .slice(0, limit);
     const mapsUrl = safeUrl(data.googleMapsUrl);
