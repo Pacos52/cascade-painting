@@ -66,10 +66,19 @@ async function routeApi(request, env, executionContext) {
 
 export default {
   async fetch(request, env, executionContext) {
-    const pathname = new URL(request.url).pathname;
+    const url = new URL(request.url);
+
+    if (url.hostname === 'www.cascadepaintingpa.com') {
+      url.hostname = 'cascadepaintingpa.com';
+      return Response.redirect(url.toString(), 308);
+    }
+
+    const pathname = url.pathname;
+
     if (pathname === '/api' || pathname.startsWith('/api/')) {
       return routeApi(request, env, executionContext);
     }
+
     return env.ASSETS.fetch(request);
   },
 };
