@@ -128,11 +128,11 @@ async function authenticateOwner(config, request) {
   const origin = request.headers.get('Origin');
   const fetchSite = request.headers.get('Sec-Fetch-Site');
 
-  if (origin && origin !== config.redirect.origin) {
+  if (fetchSite && fetchSite !== 'same-origin') {
     throw new IntegrationError('origin', 403);
   }
 
-  if (!origin && fetchSite && fetchSite !== 'same-origin') {
+  if (!fetchSite && origin && origin !== config.redirect.origin) {
     throw new IntegrationError('origin', 403);
   }
 
@@ -165,9 +165,7 @@ async function authenticateOwner(config, request) {
   const db = config.env.DB;
 
   await db
-    .prepare(
-      'DELETE FROM google_setup_attempts WHERE created_at < ?'
-    )
+    .prepare('DELETE FROM google_setup_attempts WHERE created_at < ?')
     .bind(now - BACKOFF_MS)
     .run();
 
