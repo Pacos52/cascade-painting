@@ -249,6 +249,7 @@ async function fetchJSON(url, init = {}) {
       if (data?.error === 'invalid_grant') throw new IntegrationError('reconnect_required', 401);
       if (response.status === 401) throw new IntegrationError('google_unauthorized', 401);
       if (response.status === 403) throw new IntegrationError('google_access', 403);
+      if (response.status === 404) throw new IntegrationError('google_not_found', 404);
       if (response.status === 429) throw new IntegrationError('google_rate_limit');
       throw new IntegrationError('google_unavailable');
     }
@@ -284,7 +285,7 @@ function safeGoogleMapsURL(value) {
   return '';
 }
 
-async function discoverBusiness(config, accessToken) {
+export async function discoverBusiness(config, accessToken) {
   const accounts = [];
   let token = '';
   const seenAccountPages = new Set();
@@ -310,7 +311,15 @@ async function discoverBusiness(config, accessToken) {
       seenLocationPages.add(token);
       const url = new URL(`https://mybusinessbusinessinformation.googleapis.com/v1/accounts/${accountID}/locations`);
       url.search = new URLSearchParams({ readMask: 'name,title,metadata', pageSize: '100', ...(token ? { pageToken: token } : {}) });
-      const data = await fetchJSON(url, bearer(accessToken));
+      let data;
+      try {
+        data = await fetchJSON(url, bearer(accessToken));
+      } catch (error) {
+        // Google returns 404 when an otherwise accessible account has no
+        // locations. Continue so business-group accounts are still checked.
+        if (error?.code === 'google_not_found') break;
+        throw error;
+      }
       if (data.locations && !Array.isArray(data.locations)) throw new IntegrationError('google_response');
       for (const location of data.locations || []) {
         const resource = /^locations\/([A-Za-z0-9_-]+)$/.exec(location.name || '');

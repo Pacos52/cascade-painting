@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import {
   decryptSecret,
+  discoverBusiness,
   encryptSecret,
   handleGoogleCallback,
   handleGoogleStart,
@@ -100,6 +101,47 @@ test('OAuth start requires owner password and produces an offline PKCE request',
   assert.ok(env.DB.oauthState);
   assert.ok(!page.includes(secretValue));
   assert.ok(!target.href.includes(secretValue));
+});
+
+test('business discovery skips accessible accounts with no locations', async (context) => {
+  const env = environment();
+  const config = validateConfiguration(env, new Request(env.GOOGLE_REDIRECT_URI));
+  const requests = [];
+  context.mock.method(globalThis, 'fetch', async input => {
+    const url = new URL(input);
+    requests.push(url.pathname);
+    if (url.hostname === 'mybusinessaccountmanagement.googleapis.com') {
+      return Response.json({
+        accounts: [{ name: 'accounts/personal' }, { name: 'accounts/business' }],
+      });
+    }
+    if (url.pathname === '/v1/accounts/personal/locations') {
+      return Response.json({ error: { code: 404, status: 'NOT_FOUND' } }, { status: 404 });
+    }
+    if (url.pathname === '/v1/accounts/business/locations') {
+      return Response.json({
+        locations: [{
+          name: 'locations/cascade',
+          title: 'Cascade Painting',
+          metadata: { mapsUri: 'https://www.google.com/maps/place/Cascade+Painting' },
+        }],
+      });
+    }
+    throw new Error(`Unexpected request: ${url.href}`);
+  });
+
+  const business = await discoverBusiness(config, 'access-token');
+  assert.deepEqual(business, {
+    accountID: 'business',
+    locationID: 'cascade',
+    businessName: 'Cascade Painting',
+    mapsURL: 'https://www.google.com/maps/place/Cascade+Painting',
+  });
+  assert.deepEqual(requests, [
+    '/v1/accounts',
+    '/v1/accounts/personal/locations',
+    '/v1/accounts/business/locations',
+  ]);
 });
 
 test('missing configuration fails safely and public reviews expose no secrets', async () => {
