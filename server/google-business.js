@@ -125,21 +125,72 @@ function ownerForm(action, label) {
 }
 
 async function authenticateOwner(config, request) {
-  if (request.headers.get('Origin') !== config.redirect.origin) throw new IntegrationError('origin', 403);
-  if (!request.headers.get('Content-Type')?.startsWith('application/x-www-form-urlencoded')) throw new IntegrationError('request', 400);
+  const origin = request.headers.get('Origin');
+  const fetchSite = request.headers.get('Sec-Fetch-Site');
+
+  if (origin && origin !== config.redirect.origin) {
+    throw new IntegrationError('origin', 403);
+  }
+
+  if (!origin && fetchSite && fetchSite !== 'same-origin') {
+    throw new IntegrationError('origin', 403);
+  }
+
+  if (
+    !request.headers
+      .get('Content-Type')
+      ?.startsWith('application/x-www-form-urlencoded')
+  ) {
+    throw new IntegrationError('request', 400);
+  }
+
   const body = await request.text();
-  if (body.length > 4096) throw new IntegrationError('request', 413);
+
+  if (body.length > 4096) {
+    throw new IntegrationError('request', 413);
+  }
+
   const form = new URLSearchParams(body);
-  if (form.getAll('password').length !== 1) throw new IntegrationError('authorization', 403);
+
+  if (form.getAll('password').length !== 1) {
+    throw new IntegrationError('authorization', 403);
+  }
+
   const now = Date.now();
-  const visitorHash = await sha256(`setup:${request.headers.get('CF-Connecting-IP') || 'local'}:${config.env.GOOGLE_SETUP_PASSWORD}`);
+
+  const visitorHash = await sha256(
+    `setup:${request.headers.get('CF-Connecting-IP') || 'local'}:${config.env.GOOGLE_SETUP_PASSWORD}`
+  );
+
   const db = config.env.DB;
-  await db.prepare('DELETE FROM google_setup_attempts WHERE created_at < ?').bind(now - BACKOFF_MS).run();
+
+  await db
+    .prepare(
+      'DELETE FROM google_setup_attempts WHERE created_at < ?'
+    )
+    .bind(now - BACKOFF_MS)
+    .run();
+
   // One statement ensures simultaneous requests cannot bypass the attempt cap.
-  const result = await db.prepare('INSERT INTO google_setup_attempts(visitor_hash, created_at) SELECT ?, ? WHERE (SELECT COUNT(*) FROM google_setup_attempts WHERE visitor_hash = ? AND created_at >= ?) < 8 RETURNING created_at')
-    .bind(visitorHash, now, visitorHash, now - BACKOFF_MS).first();
-  if (!result) throw new IntegrationError('rate_limit', 429);
-  if (!await equalSecrets(form.get('password') || '', config.env.GOOGLE_SETUP_PASSWORD)) throw new IntegrationError('authorization', 403);
+  const result = await db
+    .prepare(
+      'INSERT INTO google_setup_attempts(visitor_hash, created_at) SELECT ?, ? WHERE (SELECT COUNT(*) FROM google_setup_attempts WHERE visitor_hash = ? AND created_at >= ?) < 8 RETURNING created_at'
+    )
+    .bind(visitorHash, now, visitorHash, now - BACKOFF_MS)
+    .first();
+
+  if (!result) {
+    throw new IntegrationError('rate_limit', 429);
+  }
+
+  if (
+    !(await equalSecrets(
+      form.get('password') || '',
+      config.env.GOOGLE_SETUP_PASSWORD
+    ))
+  ) {
+    throw new IntegrationError('authorization', 403);
+  }
 }
 
 function ownerError(error, clearCookie) {
