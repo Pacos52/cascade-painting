@@ -10,8 +10,8 @@ PHONE = '267-461-4367'
 PHONE_HREF = '+12674614367'
 EMAIL = 'paxton@cascadepaintingpa.com'
 ADDRESS = '24 Green St, Lansdale, PA 19446'
-GOOGLE_MAPS = 'https://www.google.com/maps/search/?api=1&query=Cascade+Painting'
-ASSET_VERSION = 'v4-2-20260923'
+GOOGLE_MAPS = 'https://maps.google.com/maps?cid=1863299194290147596'
+ASSET_VERSION = 'v4-3-20260930'
 TODAY = '2026-09-16'
 
 
@@ -56,6 +56,7 @@ def schema_graph(title, desc, path, image_name, article=False, article_type='Art
             'email': EMAIL,
             'description': 'Veteran and family-owned painting company based in Lansdale and serving Montgomery County, Pennsylvania.',
             'slogan': 'Not your typical contractor experience.',
+            'sameAs': [GOOGLE_MAPS],
             'address': {
                 '@type': 'PostalAddress', 'streetAddress': '24 Green St', 'addressLocality': 'Lansdale',
                 'addressRegion': 'PA', 'postalCode': '19446', 'addressCountry': 'US'
@@ -106,8 +107,8 @@ def head(title, desc, path, image_name, article=False, extra_schema=None, preloa
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc,quote=True)}"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><link rel="canonical" href="{canonical}">
 <meta name="theme-color" content="#143746"><meta name="color-scheme" content="light"><meta name="format-detection" content="telephone=no"><meta name="author" content="Cascade Painting">
-<meta property="og:type" content="{'article' if article else 'website'}"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="Cascade Painting"><meta property="og:title" content="{html.escape(title,quote=True)}"><meta property="og:description" content="{html.escape(desc,quote=True)}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="{DOMAIN}/images/{social_file}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/jpeg">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{html.escape(title,quote=True)}"><meta name="twitter:description" content="{html.escape(desc,quote=True)}"><meta name="twitter:image" content="{DOMAIN}/images/{social_file}">
+<meta property="og:type" content="{'article' if article else 'website'}"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="Cascade Painting"><meta property="og:title" content="{html.escape(title,quote=True)}"><meta property="og:description" content="{html.escape(desc,quote=True)}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="{DOMAIN}/images/{social_file}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/jpeg"><meta property="og:image:alt" content="{html.escape(title.split('|')[0].strip(),quote=True)}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{html.escape(title,quote=True)}"><meta name="twitter:description" content="{html.escape(desc,quote=True)}"><meta name="twitter:image" content="{DOMAIN}/images/{social_file}"><meta name="twitter:image:alt" content="{html.escape(title.split('|')[0].strip(),quote=True)}">
 <link rel="icon" href="/images/favicon.png" sizes="96x96" type="image/png"><link rel="apple-touch-icon" href="/images/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">{preload_html}<link rel="stylesheet" href="/assets/site.css?v={ASSET_VERSION}">{schema_html}</head>'''
@@ -496,10 +497,18 @@ def append_js():
 
   qsa('a[href^="mailto:"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('email_click')));
   qsa('a[href*="google.com/maps"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('google_profile_click')));
-  qsa('a[href^="/projects/"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('project_view_click', { href: link.getAttribute('href') })));
-  qsa('a[href^="/resources/"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('resource_click', { href: link.getAttribute('href') })));
   qsa('a[href^="tel:"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('phone_click')));
-  qsa('a[href*="/estimate/"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('estimate_cta_click', { href: link.getAttribute('href') })));
+  qsa('a[href]').forEach(link => {
+    let path = '';
+    try {
+      const url = new URL(link.href, location.href);
+      if (url.origin === location.origin) path = url.pathname;
+    } catch (_) {}
+    const href = link.getAttribute('href');
+    if (path.startsWith('/projects/')) link.addEventListener('click', () => firstPartyEvent('project_view_click', { href }));
+    if (path.startsWith('/resources/')) link.addEventListener('click', () => firstPartyEvent('resource_click', { href }));
+    if (path === '/estimate/') link.addEventListener('click', () => firstPartyEvent('estimate_cta_click', { href }));
+  });
 
   // Measure meaningful scroll depth once per page.
   const scrollMarks = new Set();

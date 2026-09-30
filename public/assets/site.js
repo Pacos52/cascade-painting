@@ -283,10 +283,18 @@
 
   qsa('a[href^="mailto:"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('email_click')));
   qsa('a[href*="google.com/maps"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('google_profile_click')));
-  qsa('a[href^="/projects/"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('project_view_click', { href: link.getAttribute('href') })));
-  qsa('a[href^="/resources/"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('resource_click', { href: link.getAttribute('href') })));
   qsa('a[href^="tel:"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('phone_click')));
-  qsa('a[href*="/estimate/"]').forEach(link => link.addEventListener('click', () => firstPartyEvent('estimate_cta_click', { href: link.getAttribute('href') })));
+  qsa('a[href]').forEach(link => {
+    let path = '';
+    try {
+      const url = new URL(link.href, location.href);
+      if (url.origin === location.origin) path = url.pathname;
+    } catch (_) {}
+    const href = link.getAttribute('href');
+    if (path.startsWith('/projects/')) link.addEventListener('click', () => firstPartyEvent('project_view_click', { href }));
+    if (path.startsWith('/resources/')) link.addEventListener('click', () => firstPartyEvent('resource_click', { href }));
+    if (path === '/estimate/') link.addEventListener('click', () => firstPartyEvent('estimate_cta_click', { href }));
+  });
 
   // Measure meaningful scroll depth once per page.
   const scrollMarks = new Set();

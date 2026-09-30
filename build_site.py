@@ -13,8 +13,8 @@ SITE = {
     'phone_href':'+12674614367',
     'email':'paxton@cascadepaintingpa.com',
     'address':'24 Green St, Lansdale, PA 19446',
-    'google_maps':'https://www.google.com/maps/search/?api=1&query=Cascade+Painting',
-    'google_address':'https://www.google.com/maps/search/?api=1&query=24+Green+St+Lansdale+PA+19446',
+    'google_maps':'https://maps.google.com/maps?cid=1863299194290147596',
+    'google_address':'https://maps.google.com/maps?cid=1863299194290147596',
 }
 
 def rel(depth, path=''):
@@ -58,6 +58,7 @@ def business_schema():
           },
           'areaServed':[{'@type':'City','name':x} for x in ['Lansdale, PA','North Wales, PA','Ambler, PA','Blue Bell, PA','Maple Glen, PA','Horsham, PA','Plymouth Meeting, PA','Willow Grove, PA']],
           'hasMap':SITE['google_address'],
+          'sameAs':[SITE['google_maps']],
           'contactPoint':{'@type':'ContactPoint','telephone':'+1-267-461-4367','email':SITE['email'],'contactType':'customer service','areaServed':'US','availableLanguage':'English'},
           'openingHoursSpecification':[
             {'@type':'OpeningHoursSpecification','dayOfWeek':['Monday','Tuesday','Wednesday','Thursday','Friday'],'opens':'07:00','closes':'19:00'},
@@ -114,7 +115,7 @@ def head(title, desc, path, depth=0, image='hero-living-room-1600.webp', schema=
     social_alt = f'Cascade Painting project photography for {title.split("|")[0].strip()}'
     review_assets = ''
     if path in ('/', '/reviews/'):
-        review_assets = f'<link rel="stylesheet" href="{rel(depth,"assets/google-reviews.css")}?v=20260928"><script src="{rel(depth,"assets/google-reviews.js")}?v=20260930" defer></script>'
+        review_assets = f'<link rel="stylesheet" href="{rel(depth,"assets/google-reviews.css")}?v=20260928"><script src="{rel(depth,"assets/google-reviews.js")}?v=20260930-2" defer></script>'
     return f'''<!doctype html><html lang="en-US"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc, quote=True)}"><meta name="robots" content="{robots}"><link rel="canonical" href="{canonical}">

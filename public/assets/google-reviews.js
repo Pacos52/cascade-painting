@@ -127,8 +127,6 @@
   }
 
   async function loadReviews() {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
     sections.forEach(section => {
       section.querySelector('[data-reviews-status]').textContent = 'Loading recent Google reviews…';
       section.querySelector('[data-reviews-list]').setAttribute('aria-busy', 'true');
@@ -136,7 +134,7 @@
     try {
       // The same-origin endpoint owns caching and all Google credentials.
       const response = await fetch('/api/reviews', {
-        headers: { Accept: 'application/json' }, credentials: 'omit', signal: controller.signal
+        headers: { Accept: 'application/json' }, credentials: 'omit'
       });
       if (!response.ok) throw new Error('Reviews unavailable');
       const data = await response.json();
@@ -146,8 +144,6 @@
       sections.forEach(section => render(section, data));
     } catch {
       sections.forEach(section => setStatus(section, fallback));
-    } finally {
-      clearTimeout(timeout);
     }
   }
 
