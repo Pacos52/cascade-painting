@@ -206,6 +206,8 @@ function ownerError(error, clearCookie, reference = '') {
     google_unauthorized: 'Google rejected the temporary authorization. Start a new connection and approve access again.',
     google_response: 'Google returned an unexpected response while the connection was being completed.',
     google_unavailable: 'Google could not be reached while the connection was being completed. Please try again.',
+    google_fetch: 'The server could not send the OAuth token request to Google.',
+    google_redirect: 'Google redirected the OAuth token request unexpectedly.',
     google_rate_limit: 'Google temporarily limited API requests. Please wait and try again.',
     oauth_invalid_client: 'Google rejected the OAuth client credentials. Check that the deployed client ID and secret belong to the same OAuth client.',
     oauth_invalid_request: 'Google rejected the OAuth token request. Check the deployed callback and OAuth request settings.',
@@ -247,10 +249,12 @@ export async function handleGoogleStart({ request, env }) {
 }
 
 async function fetchJSON(url, init = {}) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 12000);
   try {
-    const response = await fetch(url, { ...init, signal: controller.signal, redirect: 'error' });
+    // Use a manual redirect policy so credentials are never forwarded to a
+    // different URL and a 3xx response can be diagnosed instead of surfacing
+    // as an opaque fetch rejection in the Workers runtime.
+    const response = await fetch(url, { ...init, redirect: 'manual' });
+    if (response.status >= 300 && response.status < 400) throw new IntegrationError('google_redirect', 502);
     let data;
     try { data = await response.json(); } catch { throw new IntegrationError('google_response'); }
     if (!response.ok) {
@@ -269,8 +273,8 @@ async function fetchJSON(url, init = {}) {
     return data;
   } catch (error) {
     if (error instanceof IntegrationError) throw error;
-    throw new IntegrationError('google_unavailable');
-  } finally { clearTimeout(timeout); }
+    throw new IntegrationError('google_fetch');
+  }
 }
 
 async function exchangeToken(config, parameters) {
