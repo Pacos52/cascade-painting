@@ -85,6 +85,7 @@ export async function onRequestPost(context) {
 
   const successes = [];
   const failures = [];
+  let crmEmailAlertSent = false;
 
   // Optional D1 persistence. The core lead fields intentionally remain compatible with schema.sql.
   if (env.DB) {
@@ -107,12 +108,16 @@ export async function onRequestPost(context) {
         body: JSON.stringify({ event: 'lead.created', lead })
       });
       if (!response.ok) throw new Error('webhook_failed');
+      const handoff = await response.json().catch(() => ({}));
+      crmEmailAlertSent = handoff.emailAlertSent === true;
       successes.push('crm');
     } catch (_) { failures.push('crm'); }
   }
 
   // Optional Resend email delivery.
-  if (env.RESEND_API_KEY && env.LEAD_TO_EMAIL && env.LEAD_FROM_EMAIL) {
+  // Resend is the fallback path. Avoid sending a duplicate when Cascade OS
+  // confirmed it already sent the alert through the connected Gmail mailbox.
+  if (!crmEmailAlertSent && env.RESEND_API_KEY && env.LEAD_TO_EMAIL && env.LEAD_FROM_EMAIL) {
     try {
       const safe = value => String(value).replace(/[<>&]/g, char => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[char]));
       const attributionRows = [
@@ -168,6 +173,12 @@ export async function onRequestPost(context) {
       if (!response.ok) throw new Error('email_failed');
       successes.push('email');
     } catch (_) { failures.push('email'); }
+  }
+
+  // Preserve the lead submission when no alert route is configured, but expose
+  // the missing notification path in the response for monitoring.
+  if (!crmEmailAlertSent && !successes.includes('email') && !failures.includes('email')) {
+    failures.push('email');
   }
 
   if (!successes.length) return json({ ok: false, error: 'delivery_not_configured' }, 503);

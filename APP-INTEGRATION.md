@@ -5,7 +5,7 @@ The public site is now prepared to act as the acquisition layer for `app.cascade
 ## Lead contract
 `POST /api/lead` creates a lead with customer/project fields plus landing page, source page, referrer, UTM parameters and GCLID. It can persist to D1, send an urgent Resend email, and forward the same normalized lead to the app.
 
-For the app handoff, set the website Worker's `CRM_WEBHOOK_URL` to `https://portal.cascadepaintingpa.com/public-api/website-lead` and set `CRM_WEBHOOK_TOKEN` to the same random secret stored as `WEBSITE_WEBHOOK_TOKEN` on the app Worker. The app creates a high-priority lead and one-hour response task. When Google Gmail is connected with sending permission, it also sends a high-priority alert from that mailbox to itself. Keep Resend configured as a second notification path if available.
+For the app handoff, set the website Worker's `CRM_WEBHOOK_URL` to `https://portal.cascadepaintingpa.com/public-api/website-lead` and set `CRM_WEBHOOK_TOKEN` to the same random secret stored as `WEBSITE_WEBHOOK_TOKEN` on the app Worker. The app creates a high-priority lead and one-hour response task. When Google Gmail is connected with sending permission, it also sends a high-priority alert from that mailbox to itself. Resend is used as a fallback when the app Gmail alert is unavailable, avoiding duplicate notifications.
 
 Recommended CRM lead stages: `new -> contacted -> estimate_scheduled -> estimate_sent -> won/lost -> scheduled -> completed -> review_requested`.
 
