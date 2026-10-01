@@ -127,7 +127,7 @@ export async function onRequestPost(context) {
       const attributionHtml = attributionRows.length
         ? `<hr><h3>Attribution</h3>${attributionRows.map(([label, value]) => `<p><strong>${safe(label)}:</strong> ${safe(value)}</p>`).join('')}`
         : '';
-      const emailHtml = `<h2>New Cascade Painting website lead</h2>
+      const emailHtml = `<h2>🚨 New Cascade Painting estimate request</h2>
         <p><strong>Name:</strong> ${safe(lead.name)}</p>
         <p><strong>Phone:</strong> ${safe(lead.phone)}</p>
         <p><strong>Email:</strong> ${safe(lead.email)}</p>
@@ -144,8 +144,25 @@ export async function onRequestPost(context) {
           from: env.LEAD_FROM_EMAIL,
           to: [env.LEAD_TO_EMAIL],
           reply_to: lead.email,
-          subject: `Website estimate request — ${lead.projectType}`,
-          html: emailHtml
+          subject: `🚨 NEW WEBSITE REQUEST — ${lead.projectType} — ${lead.name}`,
+          headers: { 'X-Priority': '1', 'Importance': 'high' },
+          html: emailHtml,
+          text: [
+            'New Cascade Painting website estimate request',
+            '',
+            `Name: ${lead.name}`,
+            `Phone: ${lead.phone}`,
+            `Email: ${lead.email}`,
+            `Project: ${lead.projectType}`,
+            `Location: ${lead.location}`,
+            `Timing: ${lead.timing}`,
+            '',
+            'Details:',
+            lead.details,
+            '',
+            `Lead ID: ${lead.id}`,
+            ...attributionRows.map(([label, value]) => `${label}: ${value}`)
+          ].join('\n')
         })
       });
       if (!response.ok) throw new Error('email_failed');
