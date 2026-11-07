@@ -9,7 +9,7 @@ DOMAIN = 'https://cascadepaintingpa.com'
 PHONE = '267-461-4367'
 PHONE_HREF = '+12674614367'
 EMAIL = 'paxton@cascadepaintingpa.com'
-ADDRESS = '24 Green St, Lansdale, PA 19446'
+SERVICE_AREA = 'Serving Montgomery County, PA'
 GOOGLE_MAPS = 'https://maps.google.com/maps?cid=1863299194290147596'
 ASSET_VERSION = 'v4-3-20260930'
 TODAY = '2026-09-16'
@@ -57,10 +57,6 @@ def schema_graph(title, desc, path, image_name, article=False, article_type='Art
             'description': 'Veteran and family-owned painting company based in Lansdale and serving Montgomery County, Pennsylvania.',
             'slogan': 'Not your typical contractor experience.',
             'sameAs': [GOOGLE_MAPS],
-            'address': {
-                '@type': 'PostalAddress', 'streetAddress': '24 Green St', 'addressLocality': 'Lansdale',
-                'addressRegion': 'PA', 'postalCode': '19446', 'addressCountry': 'US'
-            },
             'areaServed': [{'@type':'City','name':x} for x in ['Lansdale, PA','North Wales, PA','Ambler, PA','Blue Bell, PA','Maple Glen, PA','Horsham, PA','Plymouth Meeting, PA','Willow Grove, PA']],
             'contactPoint': {'@type':'ContactPoint','telephone':'+1-267-461-4367','email':EMAIL,'contactType':'customer service','availableLanguage':'English'}
         },
@@ -121,7 +117,7 @@ def header(active=''):
 
 
 def footer():
-    return f'''<footer class="site-footer"><div class="wrap footer-grid"><div class="footer-brand"><img src="/images/logo-footer.png" width="488" height="289" alt="Cascade Painting" loading="lazy" decoding="async"><p>Veteran and family-owned painting company based in Lansdale and serving communities throughout Montgomery County, Pennsylvania.</p><a class="text-link light-link" href="/estimate/">Start a project →</a></div><div class="footer-col"><span>Services</span><a href="/interior-painting-lansdale-pa/">Interior Painting</a><a href="/exterior-painting-lansdale-pa/">Exterior Painting</a><a href="/cabinet-refinishing-lansdale-pa/">Cabinet Refinishing</a><a href="/wallpaper-removal-drywall-repair/">Drywall & Wallpaper</a><a href="/floor-coatings-lansdale-pa/">Floor Coatings</a><a href="/commercial-painting-lansdale-pa/">Commercial Painting</a></div><div class="footer-col"><span>Company</span><a href="/projects/">Projects</a><a href="/our-standard/">Our Standard</a><a href="/about/">About</a><a href="/reviews/">Reviews</a><a href="/service-areas/">Service Areas</a><a href="/resources/">Resources</a></div><div class="footer-col"><span>Contact</span><a href="tel:{PHONE_HREF}">{PHONE}</a><a href="mailto:{EMAIL}">{EMAIL}</a><a href="{GOOGLE_MAPS}" target="_blank" rel="noopener noreferrer">{ADDRESS}</a><p>Mon–Fri 7 AM–7 PM<br>Sat 9 AM–5 PM</p></div></div><div class="wrap footer-bottom"><span>© <span data-year></span> Cascade Painting</span><div><a href="/privacy/">Privacy</a></div></div></footer><div class="mobile-cta" aria-label="Quick contact"><a href="tel:{PHONE_HREF}">Call</a><a href="/estimate/">Request Estimate</a></div><script src="/assets/site.js?v={ASSET_VERSION}" defer></script></body></html>'''
+    return f'''<footer class="site-footer"><div class="wrap footer-grid"><div class="footer-brand"><img src="/images/logo-footer.png" width="488" height="289" alt="Cascade Painting" loading="lazy" decoding="async"><p>Veteran and family-owned painting company based in Lansdale and serving communities throughout Montgomery County, Pennsylvania.</p><a class="text-link light-link" href="/estimate/">Start a project →</a></div><div class="footer-col"><span>Services</span><a href="/interior-painting-lansdale-pa/">Interior Painting</a><a href="/exterior-painting-lansdale-pa/">Exterior Painting</a><a href="/cabinet-refinishing-lansdale-pa/">Cabinet Refinishing</a><a href="/wallpaper-removal-drywall-repair/">Drywall & Wallpaper</a><a href="/floor-coatings-lansdale-pa/">Floor Coatings</a><a href="/commercial-painting-lansdale-pa/">Commercial Painting</a></div><div class="footer-col"><span>Company</span><a href="/projects/">Projects</a><a href="/our-standard/">Our Standard</a><a href="/about/">About</a><a href="/reviews/">Reviews</a><a href="/service-areas/">Service Areas</a><a href="/resources/">Resources</a></div><div class="footer-col"><span>Contact</span><a href="tel:{PHONE_HREF}">{PHONE}</a><a href="mailto:{EMAIL}">{EMAIL}</a><p>{SERVICE_AREA}</p><p>Mon–Fri 7 AM–7 PM<br>Sat 9 AM–5 PM</p></div></div><div class="wrap footer-bottom"><span>© <span data-year></span> Cascade Painting</span><div><a href="/privacy/">Privacy</a></div></div></footer><div class="mobile-cta" aria-label="Quick contact"><a href="tel:{PHONE_HREF}">Call</a><a href="/estimate/">Request Estimate</a></div><script src="/assets/site.js?v={ASSET_VERSION}" defer></script></body></html>'''
 
 
 def shell(title, desc, path, body, image_name, active='', article=False, extra_schema=None, preload=False):
